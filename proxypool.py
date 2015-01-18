@@ -1,5 +1,9 @@
 # -*- coding:utf-8 -*-
 import time
+import logging
+logging.basicConfig(format='%(asctime)s - %(levelname)s : %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 from redis_manager import RedisManager
 from . import config
@@ -14,7 +18,9 @@ class ProxyPool(object):
     def monitor(cls):
         while 1:
             if cls.rd_session.scard(config.redis_set()) == 0:
+                logger.info("crawl proxy begin")
                 cls._crawl()
+                logger.info("crawl proxy end")
             time.sleep(1)
 
     @classmethod
@@ -52,7 +58,3 @@ class ProxyPool(object):
     @classmethod
     def empty(cls):
         cls.rd_session.delete(config.redis_set())
-
-
-if __name__ == "__main__":
-    ProxyPool.monitor()

@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import re
 import random
+import logging
 import requests
 from gevent import monkey
 monkey.patch_all(thread=False)
@@ -16,6 +17,15 @@ RE_FOR_IP_PORT2 = re.compile(
 
 SITE_POOL = Pool(2)
 PROXY_CHECK_POOL = Pool(30)
+
+
+def exception_handler(func):
+    def handler(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except:
+            return []
+    return handler
 
 
 class Crawler(object):
@@ -35,8 +45,10 @@ class Crawler(object):
                 proxies
             )
         )
+        logging.info("Get %s avaliable proxies" % len(avaliable_proxies))
         self._save_to_redis(avaliable_proxies)
 
+    @exception_handler
     def crawl(self, site_url):
         proxies = []
         config.HEADER.update({'Host': site_url.split('/')[2]})
@@ -55,8 +67,8 @@ class Crawler(object):
     def _check_proxy_avaliable(self, proxy):
         test_url = 'http://www.google.cn/'
         try:
-            r = requests.get(test_url, proxies={'http': proxy}, timeout=5)
-            if '<title>Google</title>' in r.text:
+            r = requests.get(test_url, proxies={'http': proxy}, timeout=15)
+            if '<title>Google</title>' in r.text[:100]:
                 return proxy
             else:
                 return None
@@ -66,7 +78,3 @@ class Crawler(object):
     def _save_to_redis(self, proxies):
         redis_session = RedisManager.get_instance()
         redis_session.sadd(config.redis_set(), *proxies)
-
-
-if __name__ == '__main__':
-    Crawler().run()
