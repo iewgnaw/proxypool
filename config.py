@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 def redis_conf():
     return {
         'host': '127.0.0.1',

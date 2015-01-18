@@ -1,7 +1,6 @@
-import sys
-sys.path.append("..")
+# -*- coding:utf-8 -*-
 import redis
-from config import config
+import config
 
 
 class RedisManager(object):
