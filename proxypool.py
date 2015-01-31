@@ -42,7 +42,7 @@ class ProxyPool(object):
             endtime = time.time() + timeout
             proxy = cls.rd_session.srandmember(config.redis_set())
             while proxy is None:
-                if time() > endtime:
+                if time.time() > endtime:
                     return None
                 proxy = cls.rd_session.srandmember(config.redis_set())
             return proxy

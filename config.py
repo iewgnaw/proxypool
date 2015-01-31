@@ -33,9 +33,9 @@ def proxy_sites():
         #'http://proxy.com.ru/gaoni/list_2.html',
         #'http://proxy.com.ru/gaoni/list_3.html',
         #'http://proxy.com.ru/gaoni/list_4.html',
-        #'http://proxy.com.ru/gaoni/list_5.html',
+        'http://proxy.com.ru/gaoni/list_5.html',
 
-        #'http://cn-proxy.com/',
+        'http://cn-proxy.com/',
         #'http://proxy.ipcn.org/proxylist.html',
 
         #'http://www.nianshao.me/?page=1',
